@@ -63,5 +63,7 @@
     <!-- SB Admin 2 JavaScript-->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
+    @stack('scripts')
+
 </body>
 </html>

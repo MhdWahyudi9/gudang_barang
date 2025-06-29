@@ -19,7 +19,8 @@
                 </div>
                 <div class="form-group">
                     <label>Kode Barang</label>
-                    <input type="text" name="kode_barang" class="form-control" value="{{ $kode_barang }}" readonly>
+                    <input type="text" class="form-control" value="{{ $kode_barang }}" readonly>
+                    <input type="hidden" name="kode_barang" value="{{ $kode_barang }}">
                 </div>
                 <div class="form-group">
                     <label>Kategori</label>

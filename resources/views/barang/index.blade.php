@@ -9,11 +9,16 @@
 
 <div class="container-fluid">
 
+    <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">Daftar Barang</h1>
 
     <a href="{{ route('barang.create') }}" class="btn btn-primary mb-3">
         <i class="fas fa-plus"></i> Tambah Barang
     </a>
+    <a href="{{ route('barang.cetak_semua_barcode') }}" class="btn btn-success mb-3" target="_blank">
+        <i class="fas fa-print"></i> Cetak Semua Barcode
+    </a>
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

@@ -8,21 +8,27 @@
 @endphp
 
 <div class="container-fluid text-center">
-
-    <h3 class="mb-4">Cetak Barcode</h3>
-
-    <div style="width: 150px; margin: auto;">
-        {!! DNS1D::getBarcodeHTML($barang->kode_barang, 'C128', 1.4, 50) !!}
-        <small style="display: block; margin-top: -5px;">{{ $barang->kode_barang }}</small>
-    </div>
-
-    <button class="btn btn-success mt-3" onclick="window.print()">
+    <button class="btn btn-success mt-3 print-hide" onclick="window.print()">
         <i class="fas fa-print"></i> Print
     </button>
+    <div style="display: inline-block; margin: 10px; padding: 5px 10px; border: 1px dashed #aaa; text-align: center;">
+        <div style="display: block;">
+            {!! DNS1D::getBarcodeHTML($barang->kode_barang, 'C128', 1.5, 50) !!}
+        </div>
+        <div style="margin-top: 4px; font-size: 12px; text-align: center;">
+            {{ $barang->kode_barang }}
+        </div>
+    </div>
+
+
 
 </div>
 
 <style>
+.print-hide {
+    display: block;
+}
+
 @media print {
     body * {
         visibility: hidden;
@@ -36,7 +42,7 @@
         top: 0;
         width: 100%;
     }
-    button {
+    .print-hide {
         display: none !important;
     }
 }

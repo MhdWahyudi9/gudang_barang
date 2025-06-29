@@ -11,6 +11,11 @@
     <a href="{{ route('barang_keluar.create') }}" class="btn btn-primary mb-3">
         <i class="fas fa-plus"></i> Tambah Barang Keluar
     </a>
+    
+    <a href="{{ route('barang_keluar.export_pdf') }}" class="btn btn-danger mb-3">
+        <i class="fas fa-file-pdf"></i> Export PDF
+    </a>
+
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -30,6 +35,7 @@
                             <th>Jumlah</th>
                             <th>Tanggal</th>
                             <th>Keterangan</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,6 +46,11 @@
                             <td>{{ $bk->jumlah }}</td>
                             <td>{{ $bk->tanggal }}</td>
                             <td>{{ $bk->keterangan }}</td>
+                            <td>
+                                <a href="{{ route('barang_keluar.edit', $bk->id_keluar) }}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label>Kode Barang</label>
-                    <input type="text" name="kode_barang" class="form-control" value="{{ $barang->kode_barang }}" required>
+                    <input type="text" name="kode_barang" class="form-control" value="{{ $barang->kode_barang }}" readonly>
                 </div>
                 <div class="form-group">
                     <label>Kategori</label>

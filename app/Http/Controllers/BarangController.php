@@ -86,4 +86,16 @@ class BarangController extends Controller
         $barang = Barang::findOrFail($id);
         return view('barang.cetak_barcode', compact('barang'));
     }
+
+    public function cetakSemuaBarcode()
+    {
+        $barang = Barang::all();
+        return view('barang.cetak_semua_barcode', compact('barang'));
+    }
+
+
+    public function show($id)
+    {
+        return redirect()->route('barang.index');
+    }
 }

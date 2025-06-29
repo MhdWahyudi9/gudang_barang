@@ -12,6 +12,13 @@
     <hr class="sidebar-divider">
 
     <!-- Nav Items -->
+     <li class="nav-item">
+        <a class="nav-link" href="{{ route('dashboard') }}">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+
     <li class="nav-item">
         <a class="nav-link" href="{{ route('barang.index') }}">
             <i class="fas fa-fw fa-boxes"></i>
