@@ -11,7 +11,7 @@
     <a href="{{ route('barang_keluar.create') }}" class="btn btn-primary mb-3">
         <i class="fas fa-plus"></i> Tambah Barang Keluar
     </a>
-    
+
     <a href="{{ route('barang_keluar.export_pdf') }}" class="btn btn-danger mb-3">
         <i class="fas fa-file-pdf"></i> Export PDF
     </a>
@@ -50,6 +50,12 @@
                                 <a href="{{ route('barang_keluar.edit', $bk->id_keluar) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <a href="{{ route('barang_keluar.edit', $bk->id_keluar) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('barang_keluar.destroy', $bk->id_keluar) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus?')">Hapus</button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

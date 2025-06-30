@@ -46,6 +46,13 @@
                                 <a href="{{ route('barang_masuk.edit', $bm->id_masuk) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <a href="{{ route('barang_masuk.edit', $bm->id_masuk) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                <form action="{{ route('barang_masuk.destroy', $bm->id_masuk) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus?')">Hapus</button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

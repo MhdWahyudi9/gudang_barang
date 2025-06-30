@@ -70,6 +70,22 @@ class BarangMasukController extends Controller
 
         return redirect()->route('barang_masuk.index')->with('success', 'Data barang masuk berhasil diupdate!');
     }
+
+    public function destroy($id)
+    {
+        $barangMasuk = \App\Models\BarangMasuk::findOrFail($id);
+        $barang = \App\Models\Barang::findOrFail($barangMasuk->id_barang);
+
+        // Kembalikan stok
+        $barang->stok -= $barangMasuk->jumlah;
+        $barang->save();
+
+        $barangMasuk->delete();
+
+        return redirect()->route('barang_masuk.index')->with('success', 'Data barang masuk berhasil dihapus!');
+    }
+
+
     public function laporan(Request $request)
     {
         $query = \App\Models\BarangMasuk::with('barang')->orderBy('tanggal', 'desc');

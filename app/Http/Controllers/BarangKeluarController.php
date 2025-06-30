@@ -23,6 +23,33 @@ class BarangKeluarController extends Controller
 
     public function store(Request $request)
     {
+        // Kalau array items (scan barcode multiple)
+        if ($request->has('items')) {
+            foreach ($request->items as $item) {
+                $barang = Barang::where('kode_barang', $item['kode_barang'])->first();
+                if (!$barang) {
+                    return redirect()->back()->with('error', 'Barang dengan kode ' . $item['kode_barang'] . ' tidak ditemukan!');
+                }
+
+                if ($barang->stok < $item['jumlah']) {
+                    return redirect()->back()->with('error', 'Stok barang ' . $barang->nama_barang . ' tidak mencukupi!');
+                }
+
+                $barang->stok -= $item['jumlah'];
+                $barang->save();
+
+                BarangKeluar::create([
+                    'id_barang' => $barang->id_barang,
+                    'jumlah'    => $item['jumlah'],
+                    'tanggal'   => date('Y-m-d'),
+                    'keterangan'=> 'Scan Barcode',
+                ]);
+            }
+
+            return redirect()->route('barang_keluar.index')->with('success', 'Data barang keluar (scan) berhasil disimpan!');
+        }
+
+        // Kalau manual (form biasa)
         $request->validate([
             'id_barang' => 'required',
             'jumlah'    => 'required|integer',
@@ -63,13 +90,13 @@ class BarangKeluarController extends Controller
         $barangKeluar = BarangKeluar::findOrFail($id);
         $barang = Barang::findOrFail($barangKeluar->id_barang);
 
-        // Step 1: Kembalikan stok lama
+        // Kembalikan stok lama
         $barang->stok += $barangKeluar->jumlah;
 
-        // Step 2: Update data barang keluar
+        // Update data
         $barangKeluar->update($request->all());
 
-        // Step 3: Kurangi stok lagi sesuai jumlah baru
+        // Kurangi stok lagi
         if ($barang->stok < $barangKeluar->jumlah) {
             return redirect()->back()->with('error', 'Stok tidak mencukupi untuk jumlah yang baru!');
         }
@@ -80,9 +107,24 @@ class BarangKeluarController extends Controller
         return redirect()->route('barang_keluar.index')->with('success', 'Data barang keluar berhasil diupdate!');
     }
 
+    public function destroy($id)
+    {
+        $barangKeluar = \App\Models\BarangKeluar::findOrFail($id);
+        $barang = \App\Models\Barang::findOrFail($barangKeluar->id_barang);
+
+        // Kembalikan stok
+        $barang->stok += $barangKeluar->jumlah;
+        $barang->save();
+
+        $barangKeluar->delete();
+
+        return redirect()->route('barang_keluar.index')->with('success', 'Data barang keluar berhasil dihapus!');
+    }
+
+
     public function exportPdf(Request $request)
     {
-        $query = \App\Models\BarangKeluar::with('barang')->orderBy('tanggal', 'desc');
+        $query = BarangKeluar::with('barang')->orderBy('tanggal', 'desc');
 
         if ($request->start_date && $request->end_date) {
             $query->whereBetween('tanggal', [$request->start_date, $request->end_date]);
@@ -90,9 +132,8 @@ class BarangKeluarController extends Controller
 
         $barangKeluar = $query->get();
 
-        $pdf = PDF::loadView('barang_keluar.export_pdf', compact('barangKeluar'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('barang_keluar.export_pdf', compact('barangKeluar'))->setPaper('a4', 'portrait');
 
         return $pdf->download('laporan-barang-keluar.pdf');
     }
-
 }

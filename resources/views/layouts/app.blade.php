@@ -10,6 +10,22 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <!-- SB Admin 2 CSS -->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <style>
+        .nav-item.active {
+            position: relative;
+        }
+        .nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px; /* Lebar garis */
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5); /* Warna garis transparan */
+            border-radius: 0 5px 5px 0;
+            transition: all 0.3s ease;
+        }
+    </style>
 </head>
 
 <body id="page-top">

@@ -13,45 +13,49 @@ class DashboardController extends Controller
     {
         $filter = $request->filter ?? 'daily';
 
-        $totalStok   = Barang::sum('stok');
-        $totalMasuk  = BarangMasuk::sum('jumlah');
+        $totalStok = Barang::sum('stok');
+        $totalMasuk = BarangMasuk::sum('jumlah');
         $totalKeluar = BarangKeluar::sum('jumlah');
 
-        // Default daily
-        $masukQuery = BarangMasuk::selectRaw('DATE(tanggal) as label, SUM(jumlah) as total')
-            ->groupBy('label')
-            ->orderBy('label');
-
-        $keluarQuery = BarangKeluar::selectRaw('DATE(tanggal) as label, SUM(jumlah) as total')
-            ->groupBy('label')
-            ->orderBy('label');
-
-        // Monthly
-        if ($filter === 'monthly') {
-            $masukQuery = BarangMasuk::selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as label, SUM(jumlah) as total')
+        if ($filter == 'monthly') {
+            $barangMasuk = BarangMasuk::selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as label, SUM(jumlah) as total')
                 ->groupBy('label')
-                ->orderBy('label');
+                ->orderBy('label')
+                ->get();
 
-            $keluarQuery = BarangKeluar::selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as label, SUM(jumlah) as total')
+            $barangKeluar = BarangKeluar::selectRaw('DATE_FORMAT(tanggal, "%Y-%m") as label, SUM(jumlah) as total')
                 ->groupBy('label')
-                ->orderBy('label');
+                ->orderBy('label')
+                ->get();
+        } elseif ($filter == 'yearly') {
+            $barangMasuk = BarangMasuk::selectRaw('YEAR(tanggal) as label, SUM(jumlah) as total')
+                ->groupBy('label')
+                ->orderBy('label')
+                ->get();
 
-        // Yearly
-        } elseif ($filter === 'yearly') {
-            $masukQuery = BarangMasuk::selectRaw('YEAR(tanggal) as label, SUM(jumlah) as total')
+            $barangKeluar = BarangKeluar::selectRaw('YEAR(tanggal) as label, SUM(jumlah) as total')
                 ->groupBy('label')
-                ->orderBy('label');
+                ->orderBy('label')
+                ->get();
+        } else { // default daily
+            $barangMasuk = BarangMasuk::selectRaw('DATE(tanggal) as label, SUM(jumlah) as total')
+                ->groupBy('label')
+                ->orderBy('label')
+                ->get();
 
-            $keluarQuery = BarangKeluar::selectRaw('YEAR(tanggal) as label, SUM(jumlah) as total')
+            $barangKeluar = BarangKeluar::selectRaw('DATE(tanggal) as label, SUM(jumlah) as total')
                 ->groupBy('label')
-                ->orderBy('label');
+                ->orderBy('label')
+                ->get();
         }
 
-        $barangMasuk  = $masukQuery->get();
-        $barangKeluar = $keluarQuery->get();
-
         return view('dashboard.index', compact(
-            'totalStok', 'totalMasuk', 'totalKeluar', 'barangMasuk', 'barangKeluar', 'filter'
+            'totalStok',
+            'totalMasuk',
+            'totalKeluar',
+            'barangMasuk',
+            'barangKeluar',
+            'filter'
         ));
     }
 }
