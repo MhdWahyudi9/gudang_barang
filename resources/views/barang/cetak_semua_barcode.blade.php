@@ -13,16 +13,17 @@
     </button>
     
     <div class="d-flex flex-wrap justify-content-center">
-        @foreach ($barang as $b)
-        <div style="display: inline-block; margin: 5px; padding: 5px 10px; border: 1px dashed #aaa; text-align: center;">
-            <div style="display: block;">
-                {!! DNS1D::getBarcodeHTML($b->kode_barang, 'C128', 1.5, 50) !!}
+       @foreach ($barangs as $b)
+            <div style="display: inline-block; margin: 5px; padding: 5px 10px; border: 1px dashed #aaa; text-align: center;">
+                <div style="display: block;">
+                    {!! DNS1D::getBarcodeHTML($b->kode_barang, 'C128', 1.5, 50) !!}
+                </div>
+                <div style="margin-top: 4px; font-size: 12px; text-align: center;">
+                    {{ $b->kode_barang }}
+                </div>
             </div>
-            <div style="margin-top: 4px; font-size: 12px; text-align: center;">
-                {{ $b->kode_barang }}
-            </div>
-        </div>
         @endforeach
+
     </div>
 
 

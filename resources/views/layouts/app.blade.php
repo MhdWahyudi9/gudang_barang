@@ -10,20 +10,31 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <!-- SB Admin 2 CSS -->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-pertamina.png') }}">
+
+
+    <!-- Custom CSS tambahan -->
     <style>
-        .nav-item.active {
-            position: relative;
+        body {
+            background: linear-gradient(135deg, #f8f9fc 0%, #e0f7fa 100%);
+            font-family: 'Nunito', sans-serif;
         }
-        .nav-item.active::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 5px; /* Lebar garis */
-            height: 100%;
-            background: rgba(255, 255, 255, 0.5); /* Warna garis transparan */
-            border-radius: 0 5px 5px 0;
-            transition: all 0.3s ease;
+        .container-fluid {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+        .sticky-footer {
+            background: linear-gradient(90deg, #4e73df, #1cc88a);
+            color: white;
+        }
+        .sticky-footer span {
+            font-weight: bold;
+        }
+        .copyright {
+            padding: 10px 0;
         }
     </style>
 </head>
@@ -55,7 +66,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Gudang Barang &copy; 2025</span>
@@ -78,7 +89,7 @@
 
     <!-- SB Admin 2 JavaScript-->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
-
+    
     @stack('scripts')
 
 </body>

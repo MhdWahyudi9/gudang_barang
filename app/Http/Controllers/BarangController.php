@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
@@ -16,16 +17,8 @@ class BarangController extends Controller
     private function generateKodeBarang()
     {
         $lastBarang = Barang::orderBy('id_barang', 'desc')->first();
-
-        if (!$lastBarang) {
-            $kode = 'BRG-0001';
-        } else {
-            $lastNumber = intval(substr($lastBarang->kode_barang, 4));
-            $newNumber = $lastNumber + 1;
-            $kode = 'BRG-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-        }
-
-        return $kode;
+        $newNumber = $lastBarang ? intval(substr($lastBarang->kode_barang, 4)) + 1 : 1;
+        return 'BRG-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
     }
 
     public function create()
@@ -40,16 +33,24 @@ class BarangController extends Controller
             'nama_barang' => 'required',
             'kategori'    => 'nullable',
             'stok'        => 'required|integer',
+            'foto'        => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $kode_barang = $this->generateKodeBarang();
 
-        Barang::create([
+        $data = [
             'nama_barang' => $request->nama_barang,
             'kode_barang' => $kode_barang,
             'kategori'    => $request->kategori,
             'stok'        => $request->stok,
-        ]);
+        ];
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('barang', 'public');
+            $data['foto'] = $path;
+        }
+
+        Barang::create($data);
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambahkan!');
     }
@@ -67,35 +68,53 @@ class BarangController extends Controller
             'kode_barang' => 'required|unique:barang,kode_barang,' . $id . ',id_barang',
             'kategori'    => 'nullable',
             'stok'        => 'required|integer',
+            'foto'        => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $barang = Barang::findOrFail($id);
-        $barang->update($request->all());
+        $data = $request->only(['nama_barang', 'kode_barang', 'kategori', 'stok']);
+
+        if ($request->hasFile('foto')) {
+            if ($barang->foto && Storage::disk('public')->exists($barang->foto)) {
+                Storage::disk('public')->delete($barang->foto);
+            }
+            $path = $request->file('foto')->store('barang', 'public');
+            $data['foto'] = $path;
+        }
+
+        $barang->update($data);
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil diupdate!');
     }
 
     public function destroy($id)
     {
-        Barang::destroy($id);
+        $barang = Barang::findOrFail($id);
+
+        if ($barang->foto && Storage::disk('public')->exists($barang->foto)) {
+            Storage::disk('public')->delete($barang->foto);
+        }
+
+        $barang->delete();
         return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus!');
     }
 
+    /**
+     * Cetak barcode satuan
+     */
     public function cetakBarcode($id)
     {
         $barang = Barang::findOrFail($id);
         return view('barang.cetak_barcode', compact('barang'));
     }
 
+    /**
+     * Cetak semua barcode
+     */
     public function cetakSemuaBarcode()
     {
-        $barang = Barang::all();
-        return view('barang.cetak_semua_barcode', compact('barang'));
+        $barangs = Barang::all();
+        return view('barang.cetak_semua_barcode', compact('barangs'));
     }
 
-
-    public function show($id)
-    {
-        return redirect()->route('barang.index');
-    }
 }
