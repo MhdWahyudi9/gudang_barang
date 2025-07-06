@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Gudang Barang')</title>
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome (CDN) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" type="text/css">
-    <!-- Google Fonts Nunito -->
+    <!-- Google Fonts Nunito (CDN) -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
-    <!-- SB Admin 2 CSS (lokal) -->
-    <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <!-- SB Admin 2 CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-pertamina.png') }}">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Pertamina_Logo.svg/512px-Pertamina_Logo.svg.png">
 
     <style>
         body {
@@ -79,15 +79,14 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Bootstrap core JavaScript-->
+    <!-- jQuery (CDN) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap Bundle (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
+    <!-- jQuery Easing (CDN) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-
-    <!-- SB Admin 2 JavaScript (lokal) -->
-    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+    <!-- SB Admin 2 JavaScript (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/js/sb-admin-2.min.js"></script>
     
     @stack('scripts')
 
