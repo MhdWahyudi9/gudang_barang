@@ -8,8 +8,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" type="text/css">
     <!-- Google Fonts Nunito -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
-    <!-- SB Admin 2 CSS -->
+    <!-- SB Admin 2 CSS (lokal) -->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-pertamina.png') }}">
 
     <style>
@@ -85,7 +86,7 @@
     <!-- Core plugin JavaScript-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 
-    <!-- SB Admin 2 JavaScript-->
+    <!-- SB Admin 2 JavaScript (lokal) -->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
     
     @stack('scripts')
