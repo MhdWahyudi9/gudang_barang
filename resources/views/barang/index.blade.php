@@ -4,11 +4,10 @@
 
 @section('content')
 @php
-    use Milon\Barcode\Facades\DNS1DFacade as DNS1D;
+    use Milon\Barcode\Facades\DNS2DFacade as DNS2D;
 @endphp
 
 <style>
-    /* Judul keren */
     .judul-page {
         font-weight: 800;
         font-size: 2rem;
@@ -22,7 +21,6 @@
         margin-bottom: 10px;
     }
 
-    /* Header tabel polos */
     .table thead th {
         background-color: #4e73df;
         color: white !important;
@@ -33,11 +31,11 @@
         text-align: center;
     }
 
-    /* Isi tabel */
-    .table td {
-        font-weight: 500;
-        color: #343a40;
-        vertical-align: middle;
+    .table td, .table th {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        line-height: 1.2 !important;
+        vertical-align: middle !important;
     }
 
     .table tbody tr:hover {
@@ -45,16 +43,14 @@
         transition: all 0.3s;
     }
 
-    /* Badge stok */
     .badge {
-        font-size: 0.85rem;
-        padding: 6px 14px;
+        font-size: 0.75rem;
+        padding: 4px 10px;
         border-radius: 30px;
         font-weight: 600;
         letter-spacing: 0.5px;
     }
 
-    /* Tombol */
     .btn-action {
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.12);
@@ -70,7 +66,6 @@
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
-    /* Modal gambar */
     #imageModal img {
         transition: transform 0.3s, box-shadow 0.3s;
     }
@@ -80,18 +75,15 @@
     }
 </style>
 
-<div class="container-fluid">
-
-    <!-- Page Heading -->
+<div class="container-fluid" style="margin-top: -20px;">
     <h1 class="judul-page">Daftar Barang</h1>
 
-    <!-- Tombol -->
     <div class="mb-3">
         <a href="{{ route('barang.create') }}" class="btn btn-primary btn-action me-2">
             <i class="fas fa-plus"></i> Tambah Barang
         </a>
         <a href="{{ route('barang.cetak_semua_barcode') }}" class="btn btn-success btn-action" target="_blank">
-            <i class="fas fa-print"></i> Cetak Semua Barcode
+            <i class="fas fa-print"></i> Cetak Semua QR Code
         </a>
     </div>
 
@@ -102,7 +94,7 @@
     <div class="card shadow-lg mb-4 border-0">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle" width="100%" cellspacing="0">
+                <table id="tableBarang" class="table table-bordered align-middle" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -111,7 +103,7 @@
                             <th>Kategori</th>
                             <th>Stok</th>
                             <th>Foto</th>
-                            <th>Barcode</th>
+                            <th>QR Code</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -136,7 +128,7 @@
                                     <img 
                                         src="{{ asset('storage/' . $b->foto) }}" 
                                         alt="Foto" 
-                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; cursor: pointer;" 
+                                        style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px; cursor: pointer;" 
                                         onclick="openImage('{{ asset('storage/' . $b->foto) }}')">
                                 @else
                                     <span>-</span>
@@ -144,13 +136,13 @@
                             </td>
                             <td class="text-center">
                                 <div style="display: flex; flex-direction: column; align-items: center;">
-                                    {!! DNS1D::getBarcodeHTML($b->kode_barang, 'C128') !!}
+                                    {!! DNS2D::getBarcodeHTML($b->kode_barang, 'QRCODE', 2, 2) !!}
                                     <small>{{ $b->kode_barang }}</small>
                                 </div>
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('barang.cetak_barcode', $b->id_barang) }}" class="btn btn-sm btn-info btn-action mb-1" title="Cetak Barcode">
-                                    <i class="fas fa-barcode"></i> Cetak
+                                <a href="{{ route('barang.cetak_barcode', $b->id_barang) }}" class="btn btn-sm btn-info btn-action mb-1" title="Cetak QR Code">
+                                    <i class="fas fa-qrcode"></i> Cetak
                                 </a>
                                 <a href="{{ route('barang.edit', $b->id_barang) }}" class="btn btn-sm btn-warning btn-action mb-1" title="Edit">
                                     <i class="fas fa-edit"></i> Edit
@@ -172,13 +164,17 @@
     </div>
 </div>
 
-<!-- Modal Preview Foto -->
 <div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
     <img id="modalImage" src="" style="max-width:90%; max-height:90%; border: 5px solid white; border-radius: 12px;">
 </div>
 @endsection
 
 @push('scripts')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
     function openImage(src) {
         document.getElementById('modalImage').src = src;
@@ -187,6 +183,30 @@
 
     document.getElementById('imageModal').addEventListener('click', function() {
         this.style.display = 'none';
+    });
+
+    $(document).ready(function () {
+        $('#tableBarang').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 100],
+            "language": {
+                "search": "Cari Nama Barang:",
+                "lengthMenu": "Tampilkan _MENU_ data",
+                "info": "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                "paginate": {
+                    "first": "Awal",
+                    "last": "Akhir",
+                    "next": "Berikutnya",
+                    "previous": "Sebelumnya"
+                },
+                "zeroRecords": "Tidak ada data ditemukan",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(difilter dari _MAX_ total data)"
+            },
+            "columnDefs": [
+                { "orderable": false, "targets": [5, 6, 7] }
+            ]
+        });
     });
 </script>
 @endpush

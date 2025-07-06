@@ -5,10 +5,7 @@
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}"
        style="background-color: #ffffff; border: 1px solid #d1d3e2; border-radius: 12px; padding: 12px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s;">
         <div class="sidebar-brand-icon" style="display: flex; align-items: center;">
-            <img src="{{ asset('images/logo-pertamina.png') }}" style="width: 50px;">
-        </div>
-        <div class="sidebar-brand-text mx-2 text-left" style="line-height: 1.2; font-weight: bold; color: #4e73df;">
-            GUDANG <br> ENVIRONMENT
+            <img src="{{ asset('images/logo-pertamina.png') }}" style="width: 160px;">
         </div>
     </a>
 

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow"
+<nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow position-relative"
      style="background: linear-gradient(90deg, #4e73df 0%, #1cc88a 100%); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 0 0 12px 12px;">
 
     <!-- Sidebar Toggle -->
@@ -6,11 +6,11 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <!-- Logo + Title -->
-    <div class="d-flex align-items-center">
-        <h6 class="text-white fw-bold mb-0 d-none d-lg-block text-center" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.2); letter-spacing: 0.5px;">
-            Sistem Gudang Environment
-        </h6>
+    <!-- Title Tengah -->
+    <div class="mx-auto text-center position-absolute w-100" style="pointer-events: none;">
+        <h4 class="text-white fw-bold mb-0" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.2); letter-spacing: 0.5px;">
+            Gudang Environment
+        </h4>
     </div>
 
     <!-- Navbar Right -->

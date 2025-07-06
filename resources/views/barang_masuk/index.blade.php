@@ -15,7 +15,6 @@
         text-align: center;
     }
 
-    /* Isi tabel */
     .table td {
         font-weight: 500;
         color: #343a40;
@@ -27,7 +26,6 @@
         transition: all 0.3s;
     }
 
-    /* Tombol */
     .btn-action {
         border-radius: 50px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.12);
@@ -44,7 +42,6 @@
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
-    /* Judul keren */
     .judul-page {
         font-weight: 800;
         font-size: 2rem;
@@ -58,7 +55,6 @@
         margin-bottom: 15px;
     }
 
-    /* Card */
     .card-custom {
         border-radius: 20px;
         box-shadow: 0 12px 30px rgba(0,0,0,0.1);
@@ -67,10 +63,8 @@
 
 <div class="container-fluid">
 
-    <!-- Page Heading -->
     <h1 class="judul-page">Data Barang Masuk</h1>
 
-    <!-- Tombol -->
     <div class="d-flex flex-wrap gap-2 mb-3">
         <a href="{{ route('barang_masuk.create') }}" class="btn btn-primary btn-action">
             <i class="fas fa-plus"></i> Tambah Barang Masuk
@@ -86,8 +80,29 @@
 
     <div class="card card-custom mb-4 border-0">
         <div class="card-body">
+
+            <!-- Filter -->
+            <!-- Filter -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <input type="date" id="filterTanggal" class="form-control flex-grow-1" placeholder="Filter Tanggal">
+                <select id="filterBulan" class="form-select flex-grow-1">
+                    <option value="">Pilih Bulan</option>
+                    @for ($i = 1; $i <= 12; $i++)
+                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">{{ DateTime::createFromFormat('!m', $i)->format('F') }}</option>
+                    @endfor
+                </select>
+                <select id="filterTahun" class="form-select flex-grow-1">
+                    <option value="">Pilih Tahun</option>
+                    @for ($year = date('Y'); $year >= 2020; $year--)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endfor
+                </select>
+                <button class="btn btn-secondary" id="resetFilter">Reset</button>
+            </div>
+
+
             <div class="table-responsive">
-                <table class="table table-bordered align-middle" width="100%" cellspacing="0">
+                <table id="tableBarangMasuk" class="table table-bordered align-middle" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -126,4 +141,74 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        const table = $('#tableBarangMasuk').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 100],
+            "order": [[3, "desc"]],
+            "language": {
+                "search": "Cari:",
+                "lengthMenu": "Tampilkan _MENU_ data",
+                "info": "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                "paginate": {
+                    "first": "Awal",
+                    "last": "Akhir",
+                    "next": "Berikutnya",
+                    "previous": "Sebelumnya"
+                },
+                "zeroRecords": "Tidak ada data ditemukan",
+                "infoEmpty": "Menampilkan 0 data",
+                "infoFiltered": "(difilter dari _MAX_ total data)"
+            }
+        });
+
+        $('#filterTanggal, #filterBulan, #filterTahun').on('change', function() {
+            table.draw();
+        });
+
+        $('#resetFilter').on('click', function() {
+            $('#filterTanggal').val('');
+            $('#filterBulan').val('');
+            $('#filterTahun').val('');
+            table.search('').columns().search('').draw();
+        });
+
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                let tanggal = data[3] || ""; // kolom tanggal
+                let selectedTanggal = $('#filterTanggal').val();
+                let selectedBulan = $('#filterBulan').val();
+                let selectedTahun = $('#filterTahun').val();
+
+                let tglObj = new Date(tanggal);
+
+                if (selectedTanggal) {
+                    if (tanggal !== selectedTanggal) {
+                        return false;
+                    }
+                }
+                if (selectedBulan) {
+                    if ((tglObj.getMonth() + 1).toString().padStart(2, '0') !== selectedBulan) {
+                        return false;
+                    }
+                }
+                if (selectedTahun) {
+                    if (tglObj.getFullYear().toString() !== selectedTahun) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        );
+    });
+</script>
+@endpush
 @endsection
